@@ -1,0 +1,28 @@
+name: CL
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+
+    runs-on: macos-15-large
+
+    steps:
+    - name: Download ngrok
+      run: curl -o ngrok.zip https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-darwin-amd64.zip
+    - name: Extract ngrok
+      run: unzip ngrok.zip
+    - name: Authenticate ngrok
+      run: ./ngrok authtoken $NGROK_AUTH_TOKEN
+      env:
+        NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+    - name: Enable VNC
+      run: |
+        sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -restart -agent
+        sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -configure -users "runner" -privs -all
+    - name: Set VNC Password
+      run: echo $VNC_PASSWORD | perl -we 'print pack("H*", join "", <STDIN>)' > /Library/Preferences/com.apple.VNCSettings.txt
+      env:
+        VNC_PASSWORD: ${{ secrets.VNC_PASSWORD }}
+    - name: Create VNC Tunnel
+      run: ./ngrok tcp 5900
