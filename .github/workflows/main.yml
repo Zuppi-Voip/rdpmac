@@ -21,8 +21,10 @@ jobs:
     - name: Enable SSH
       run: sudo systemsetup -setremotelogin on
 
-    - name: Set Runner Password
-      run: echo "runner:P@ssw0rd!" | sudo dscl . -passwd /Users/runner
+    - name: Reset Runner Password
+      run: |
+        sudo dscl . -delete /Users/runner AuthenticationAuthority
+        sudo dscl . -passwd /Users/runner "P@ssw0rd!"
 
     - name: Start ngrok Tunnel
       run: ./ngrok tcp 22 > ngrok.log &
