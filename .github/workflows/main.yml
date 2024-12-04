@@ -22,10 +22,7 @@ jobs:
       run: sudo systemsetup -setremotelogin on
 
     - name: Set Runner Password
-      run: |
-        sudo dscl . -passwd /Users/runner $PASSWORD
-      env:
-        PASSWORD: ${{ secrets.USER_PASSWORD }}
+      run: echo "runner:P@ssw0rd!" | sudo dscl . -passwd /Users/runner
 
     - name: Start ngrok Tunnel
       run: ./ngrok tcp 22 > ngrok.log &
