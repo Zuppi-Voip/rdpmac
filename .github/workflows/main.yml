@@ -23,6 +23,7 @@ jobs:
       run: |
         sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -restart -agent
         sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -configure -users "runner" -privs -all
+        sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -debug
 
     - name: Set VNC Password
       run: echo $VNC_PASSWORD | perl -we 'print pack("H*", join "", <STDIN>)' | sudo tee /Library/Preferences/com.apple.VNCSettings.txt > /dev/null
@@ -31,3 +32,6 @@ jobs:
 
     - name: Create VNC Tunnel
       run: ./ngrok tcp 5900
+
+    - name: Enable SSH (Fallback Access)
+      run: sudo systemsetup -setremotelogin on
