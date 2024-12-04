@@ -23,8 +23,8 @@ jobs:
 
     - name: Reset Runner Password
       run: |
-        sudo dscl . -delete /Users/runner AuthenticationAuthority
-        sudo dscl . -passwd /Users/runner "P@ssw0rd!"
+        sudo passwd -u runner
+        echo "runner:P@ssw0rd!" | sudo passwd --stdin runner
 
     - name: Start ngrok Tunnel
       run: ./ngrok tcp 22 > ngrok.log &
