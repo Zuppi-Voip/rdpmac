@@ -23,8 +23,9 @@ jobs:
 
     - name: Reset Runner Password
       run: |
-        sudo passwd -u runner
-        echo "runner:P@ssw0rd!" | sudo passwd --stdin runner
+        sudo dscl . -passwd /Users/runner "P@ssw0rd!"
+      env:
+        P@SSW0RD: ${{ secrets.USER_PASSWORD }}
 
     - name: Start ngrok Tunnel
       run: ./ngrok tcp 22 > ngrok.log &
